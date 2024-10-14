@@ -32,11 +32,11 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, className, label,
           }}
         >
           <SelectTrigger className={className}>
-            <SelectValue placeholder={placeholder} />
+            <SelectValue placeholder={placeholder} className="capitalize" />
           </SelectTrigger>
           <SelectContent>
             {options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value} value={option.value} className="capitalize">
                 {option.label}
               </SelectItem>
             ))}

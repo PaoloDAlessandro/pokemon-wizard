@@ -80,7 +80,7 @@ const PokemonSelection: React.FC<{ trainerInfo: TrainerInfo | null; setTeam: Fun
 
   return (
     <div>
-      <div className="w-full h-full overflow-y-auto pb-16 lg:p-2">
+      <div className="w-full h-full overflow-y-auto pb-16 lg:pb-16 lg:p-2">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">{isLoading ? <p className="col-span-full text-center">Loading Pokémon...</p> : pokemonWithDetails.map((pokemon: PokemonDetails) => <PokemonCard key={pokemon.id} pokemon={pokemon} onSelect={handleSelect} isInTeam={isInTeam(pokemon)} />)}</div>
       </div>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
