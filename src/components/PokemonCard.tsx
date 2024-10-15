@@ -8,15 +8,15 @@ import { Button } from "./Button";
 
 const PokemonCard: React.FC<{
   pokemon: PokemonDetails;
-  onSelect: (pokemon: PokemonDetails) => void;
-  isInTeam: boolean;
+  onSelect?: (pokemon: PokemonDetails) => void;
+  isInTeam?: boolean;
 }> = ({ pokemon, onSelect, isInTeam }) => {
   return (
     <ResponsiveDialog trigger={<PokemonCardListItem pokemon={pokemon} onSelect={onSelect} isInTeam={isInTeam} />}>
       <div className="flex flex-col items-center lg:max-h-[84vh] p-6 bg-gradient-to-b overflow-y-auto from-blue-100 to-blue-50 rounded-xl">
         <div className="flex flex-col items-center max-h-[90dvh] overflow-auto scrollbar-hide">
           <div className="flex flex-row justify-center w-4/5 px-4 py-2 mb-4 bg-white rounded-lg shadow-lg">
-            <div className="relative md:size-32 lg:size-48">
+            <div className="relative size-52 md:size-32 lg:size-48">
               <Carousel className="w-full h-full">
                 <CarouselContent>
                   <CarouselItem>
@@ -88,15 +88,17 @@ const PokemonCard: React.FC<{
           </div>
         </div>
 
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(pokemon);
-          }}
-          className={`w-full py-2 mt-6 rounded-md text-white text-sm font-medium transition-colors duration-300 ${isInTeam ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
-        >
-          {isInTeam ? "Remove from Team" : "Add to Team"}
-        </Button>
+        {onSelect && (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(pokemon);
+            }}
+            className={`w-full py-2 mt-6 rounded-md text-white text-sm font-medium transition-colors duration-300 ${isInTeam ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
+          >
+            {isInTeam ? "Remove from Team" : "Add to Team"}
+          </Button>
+        )}
       </div>
     </ResponsiveDialog>
   );
@@ -104,8 +106,8 @@ const PokemonCard: React.FC<{
 
 interface PokemonCardListItemProps {
   pokemon: PokemonDetails;
-  onSelect: (pokemon: PokemonDetails) => void;
-  isInTeam: boolean;
+  onSelect?: (pokemon: PokemonDetails) => void;
+  isInTeam?: boolean;
 }
 
 const PokemonCardListItem = React.forwardRef<HTMLDivElement, PokemonCardListItemProps>(({ pokemon, onSelect, isInTeam, ...props }, ref) => {
@@ -114,30 +116,34 @@ const PokemonCardListItem = React.forwardRef<HTMLDivElement, PokemonCardListItem
       <div className="relative pt-[70%] bg-gradient-to-b from-blue-100 to-blue-50">
         <img src={pokemon.sprites.front_default} alt={pokemon.name} className="absolute top-0 left-0 w-full h-full object-contain p-4" />
       </div>
-      <div className="p-4">
-        <Typography as="h3" variant="h4" className="font-bold capitalize text-gray-800 mb-2 truncate">
-          {pokemon.name}
-        </Typography>
-        <div className="flex flex-wrap gap-2 mb-3">
-          {pokemon.types.map((type) => (
-            <span key={type.type.name} className="px-2 py-1 bg-blue-500 rounded-full text-white text-xs font-semibold uppercase tracking-wide">
-              {type.type.name}
-            </span>
-          ))}
+      <div className="p-4 flex flex-col justify-between h-full">
+        <div className="flex flex-col">
+          <Typography as="h3" variant="h4" className="font-bold capitalize text-gray-800 mb-2 truncate">
+            {pokemon.name}
+          </Typography>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {pokemon.types.map((type) => (
+              <span key={type.type.name} className="px-2 py-1 bg-blue-500 rounded-full text-white text-xs font-semibold uppercase tracking-wide">
+                {type.type.name}
+              </span>
+            ))}
+          </div>
+          <div className="text-sm text-gray-600 mb-4">
+            <span className="mr-3">HP: {pokemon.stats.find((stat) => stat.stat.name === "hp")?.base_stat}</span>
+            <span>EXP: {pokemon.base_experience}</span>
+          </div>
         </div>
-        <div className="text-sm text-gray-600 mb-4">
-          <span className="mr-3">HP: {pokemon.stats.find((stat) => stat.stat.name === "hp")?.base_stat}</span>
-          <span>EXP: {pokemon.base_experience}</span>
-        </div>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent triggering the dialog
-            onSelect(pokemon);
-          }}
-          className={`w-full py-2 rounded-md text-white text-sm font-medium transition-colors duration-300 ${isInTeam ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
-        >
-          {isInTeam ? "Remove from Team" : "Add to Team"}
-        </Button>
+        {onSelect && (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent triggering the dialog
+              onSelect(pokemon);
+            }}
+            className={`w-full py-2 rounded-md text-white text-sm font-medium transition-colors duration-300 ${isInTeam ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
+          >
+            {isInTeam ? "Remove from Team" : "Add to Team"}
+          </Button>
+        )}
       </div>
     </div>
   );

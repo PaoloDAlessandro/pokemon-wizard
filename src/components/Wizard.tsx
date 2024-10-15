@@ -1,30 +1,43 @@
-import React, { useState } from "react";
-import { PokemonTeam, TrainerInfo } from "../types";
-import OpponentSelection from "./OpponentSelection";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { PokemonListItem, TrainerInfo, PokemonDetails } from "../types";
 import PokemonSelection from "./PokemonSelection";
+import OpponentSelection from "./OpponentSelection";
 import TrainerDetails from "./TrainerDetails";
-import WizardProgress from "./WizardProgress";
 
-interface WizardProps {
-  step: number;
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-}
-
-const Wizard: React.FC<WizardProps> = ({ step, setStep }) => {
+const Wizard: React.FC<{ step: number; setStep: Function }> = ({ step, setStep }) => {
   const [trainerInfo, setTrainerInfo] = useState<TrainerInfo | null>(null);
-  const [team, setTeam] = useState<PokemonTeam>([]);
-  const [opponentTeam, setOpponentTeam] = useState<PokemonTeam>([]);
+  const [team, setTeam] = useState<PokemonDetails[]>([]);
+  const [, setOpponent] = useState<PokemonDetails | null>(null);
+  const [allPokemon, setAllPokemon] = useState<PokemonListItem[]>([]);
 
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  useEffect(() => {
+    fetchAllPokemon();
+  }, []);
 
-  return (
-    <div className="w-11/12 lg:w-full lg:max-w-[96rem] h-full mx-auto">
-      {step === 1 && <TrainerDetails setTrainerInfo={setTrainerInfo} nextStep={nextStep} />}
-      {step === 2 && <PokemonSelection trainerInfo={trainerInfo} setTeam={setTeam} />}
-      {step === 3 && <OpponentSelection team={team} setOpponentTeam={setOpponentTeam} />}
-    </div>
-  );
+  const fetchAllPokemon = async () => {
+    try {
+      const allPokemonResponse = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=10000");
+      const allPokemonList = allPokemonResponse.data.results;
+      setAllPokemon(allPokemonList);
+    } catch (error) {
+      console.error("Error fetching Pokemon list:", error);
+    }
+  };
+
+  const nextStep = () => setStep(step + 1);
+  const prevStep = () => setStep(step - 1);
+
+  switch (step) {
+    case 1:
+      return <TrainerDetails trainerInfo={trainerInfo} setTrainerInfo={setTrainerInfo} nextStep={nextStep} />;
+    case 2:
+      return <PokemonSelection trainerInfo={trainerInfo} team={team} setTeam={setTeam} prevStep={prevStep} nextStep={nextStep} allPokemon={allPokemon} />;
+    case 3:
+      return <OpponentSelection playerTeam={team} setOpponentTeam={setOpponent} allPokemon={allPokemon} nextStep={nextStep} prevStep={prevStep} />;
+    default:
+      return <div>Invalid step</div>;
+  }
 };
 
 export default Wizard;

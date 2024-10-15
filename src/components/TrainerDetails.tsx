@@ -8,15 +8,16 @@ import { trainerDetailsSchema } from "../validators/TrainerDetails";
 import { Button } from "./Button";
 
 interface TrainerDetailsProps {
+  trainerInfo: TrainerInfo | null;
   setTrainerInfo: React.Dispatch<React.SetStateAction<TrainerInfo | null>>;
   nextStep: () => void;
 }
 
-const TrainerDetails: React.FC<TrainerDetailsProps> = ({ setTrainerInfo, nextStep }) => {
+const TrainerDetails: React.FC<TrainerDetailsProps> = ({ trainerInfo, setTrainerInfo, nextStep }) => {
   const initialValues: TrainerInfo = {
-    playerName: "",
-    teamName: "",
-    favoriteType: "",
+    playerName: trainerInfo?.playerName || "",
+    teamName: trainerInfo?.teamName || "",
+    favoriteType: trainerInfo?.favoriteType || "",
   };
   const [types, setTypes] = useState<{ name: string }[]>([]);
 
@@ -41,9 +42,7 @@ const TrainerDetails: React.FC<TrainerDetailsProps> = ({ setTrainerInfo, nextSte
           <Field as={Input} label="Player Name" name="playerName" errorMessage={touched.playerName && errors.playerName} />
           <Field as={Input} label="Team Name" name="teamName" errorMessage={touched.teamName && errors.teamName} />
           <Field as={Select} placeholder="Pick one" name="favoriteType" options={types.map((type) => ({ value: type.name, label: type.name }))} label="Favorite Type" errorMessage={(touched.favoriteType && errors.favoriteType) || ""} />
-          <Button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Next
-          </Button>
+          <Button type="submit">Next</Button>
         </Form>
       )}
     </Formik>
