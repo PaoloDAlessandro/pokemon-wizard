@@ -38,11 +38,13 @@ const TrainerDetails: React.FC<TrainerDetailsProps> = ({ trainerInfo, setTrainer
       }}
     >
       {({ errors, touched }) => (
-        <Form className="max-w-md mx-auto flex flex-col gap-y-2 mt-40">
+        <Form className="max-w-md mx-auto flex flex-col gap-y-2 mt-16 lg:mt-40">
           <Field as={Input} label="Player Name" name="playerName" errorMessage={touched.playerName && errors.playerName} />
           <Field as={Input} label="Team Name" name="teamName" errorMessage={touched.teamName && errors.teamName} />
           <Field as={Select} placeholder="Pick one" name="favoriteType" options={types.map((type) => ({ value: type.name, label: type.name }))} label="Favorite Type" errorMessage={(touched.favoriteType && errors.favoriteType) || ""} />
-          <Button type="submit">Next</Button>
+          <Button type="submit" className="mt-2" disabled={Object.keys(errors).length > 0}>
+            Next
+          </Button>
         </Form>
       )}
     </Formik>

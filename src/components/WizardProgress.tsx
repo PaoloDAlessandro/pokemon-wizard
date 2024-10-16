@@ -14,7 +14,7 @@ const steps = [
 const WizardProgress: React.FC<WizardProgressProps> = ({ currentStep }) => {
   return (
     <div className="mb-6">
-      <ol className="flex items-center w-full">
+      <ol className="flex items-center w-full lg:w-11/12 mx-auto">
         {steps.map((step, index) => (
           <li key={step.number} className={`flex items-center ${index < steps.length - 1 ? "w-full" : ""}`}>
             <div

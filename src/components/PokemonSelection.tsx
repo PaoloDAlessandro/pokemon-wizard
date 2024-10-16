@@ -6,6 +6,7 @@ import { Button } from "./Button";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
 import Loader from "./Loader";
+import { toast } from "../hooks/use-toast";
 
 const POKEMON_PER_PAGE = 20;
 
@@ -76,6 +77,14 @@ const PokemonSelection: React.FC<{ trainerInfo: TrainerInfo | null; team: Pokemo
       } else if (prev.length < 7) {
         return [...prev, pokemon];
       }
+      if (prev.length === 7) {
+        toast({
+          title: "Team full",
+          description: "You can only have 7 pokemons in your team",
+          variant: "destructive",
+          duration: 300000,
+        });
+      }
       return prev;
     });
   };
@@ -88,8 +97,16 @@ const PokemonSelection: React.FC<{ trainerInfo: TrainerInfo | null; team: Pokemo
 
   return (
     <div className="max-w-[100rem] mx-auto">
-      <div className="w-full h-full overflow-y-auto pb-16 lg:pb-16 lg:p-2">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">{isLoading ? <Loader /> : pokemonWithDetails.map((pokemon: PokemonDetails) => <PokemonCard key={pokemon.id} pokemon={pokemon} onSelect={handleSelect} isInTeam={isInTeam(pokemon)} />)}</div>
+      <div className="w-full h-full overflow-y-auto pb-20 lg:pb-16 lg:p-2">
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
+            {pokemonWithDetails.map((pokemon: PokemonDetails) => (
+              <PokemonCard key={pokemon.id} pokemon={pokemon} onSelect={handleSelect} isInTeam={isInTeam(pokemon)} />
+            ))}
+          </div>
+        )}
       </div>
       <div className="bg-white fixed bottom-0 py-2 pb-4 lg:pb-2 left-0 w-full min-h-10">
         <div className="flex flex-row justify-between items-center w-11/12 mx-auto max-w-[100rem]">

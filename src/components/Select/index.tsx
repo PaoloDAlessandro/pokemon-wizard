@@ -59,7 +59,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, className, label,
   return (
     <div className="flex flex-col h-[76px]" ref={selectRef}>
       {label && (
-        <label htmlFor={field.name} className="mb-1 text-sm font-medium">
+        <label htmlFor={field.name} className="text-sm font-medium">
           {label}
         </label>
       )}
@@ -83,7 +83,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, className, label,
           </div>
         )}
       </div>
-      {errorMessage && <span className="mt-1 text-xs text-red-500">{errorMessage}</span>}
+      {errorMessage && <span className="text-xs text-red-500">{errorMessage}</span>}
     </div>
   );
 };

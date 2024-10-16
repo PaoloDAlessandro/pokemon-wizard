@@ -1,9 +1,8 @@
 import * as React from "react";
 
 import { Dialog, DialogContent, DialogTrigger } from "../../components/Dialog";
-import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerTrigger } from "../../components/Drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "../../components/Drawer";
 import useMediaQuery from "../../hooks/use-media-query";
-import { Button } from "../Button";
 
 interface ResponsiveDialogProps {
   trigger: React.ReactNode;

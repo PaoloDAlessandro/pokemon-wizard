@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CheckCircle2, ChevronLeftIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { PokemonDetails, PokemonListItem, PokemonTeam } from "../types";
 import { Button } from "./Button";
 import Loader from "./Loader";
@@ -15,11 +15,6 @@ const OpponentSelection: React.FC<{
 }> = ({ playerTeam, setOpponentTeam, allPokemon, nextStep, prevStep }) => {
   const [opponentTeam, setOpponentTeamState] = useState<PokemonDetails[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
-
-  useEffect(() => {
-    generateOpponentTeam();
-  }, []);
 
   const generateOpponentTeam = async () => {
     setIsLoading(true);
@@ -44,31 +39,22 @@ const OpponentSelection: React.FC<{
     setIsLoading(false);
   };
 
+  if (opponentTeam.length === 0 && !isLoading) {
+    generateOpponentTeam();
+  }
+
   const handleConfirm = async () => {
     setIsLoading(true);
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setOpponentTeam(opponentTeam);
-    setIsConfirmed(true);
     setIsLoading(false);
+    nextStep();
   };
 
   const handleNextStep = () => {
     nextStep();
   };
-
-  if (isConfirmed) {
-    return (
-      <div className="w-full max-w-4xl mx-auto p-4 text-center">
-        <CheckCircle2 className="text-green-500 size-16 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold mb-4">All data submitted!</h2>
-        <p className="mb-4">You are ready to start the battle!</p>
-        <Button onClick={handleNextStep} disabled>
-          Start Battle
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
@@ -76,7 +62,7 @@ const OpponentSelection: React.FC<{
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <div className="pb-16">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {opponentTeam.map((pokemon: PokemonDetails) => (
               <PokemonCard key={pokemon.name} pokemon={pokemon} />
@@ -90,7 +76,7 @@ const OpponentSelection: React.FC<{
               Confirm Team
             </Button>
           </div>
-        </>
+        </div>
       )}
       <div className="bg-white fixed bottom-0 py-2 pb-4 lg:pb-2 left-0 w-full min-h-10">
         <div className="flex flex-row justify-between items-center w-11/12 mx-auto max-w-[100rem]">

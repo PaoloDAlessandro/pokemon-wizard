@@ -33,6 +33,14 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       );
     }
 
+    if (currentPage === 1 && totalPages > 3) {
+      pageNumbers.push(
+        <button key={currentPage + 2} className="py-1 bg-gray-200 min-h-9 min-w-9 hover:bg-gray-300 rounded hidden lg:block" onClick={() => onPageChange(currentPage + 2)}>
+          {currentPage + 2}
+        </button>
+      );
+    }
+
     if (currentPage < totalPages - 2) {
       pageNumbers.push(
         <button key={totalPages} className="py-1 bg-gray-200 min-h-9 min-w-9 hover:bg-gray-300 rounded hidden lg:block" onClick={() => onPageChange(totalPages)}>

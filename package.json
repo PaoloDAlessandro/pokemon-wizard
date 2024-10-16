@@ -7,7 +7,7 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@radix-ui/react-toast": "^1.2.2",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.113",
     "@types/react": "^18.3.11",
