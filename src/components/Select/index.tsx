@@ -64,7 +64,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, className, label,
         </label>
       )}
       <div className={`relative ${className}`}>
-        <button type="button" className="w-full h-10 px-3 py-2 text-left bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" onClick={handleToggle}>
+        <button type="button" className="w-full h-10 px-3 py-2 text-left bg-white border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onClick={handleToggle}>
           {selectedOption ? <span className="capitalize">{selectedOption.label}</span> : <span className="text-gray-400">{placeholder}</span>}
         </button>
         {isOpen && (
