@@ -24,12 +24,12 @@ const WizardProgress: React.FC<WizardProgressProps> = ({ currentStep }) => {
                 transition-all duration-300 ease-in-out
               `}
             >
-              {currentStep > step.number ? <Check className="w-4 h-4 text-white" /> : <span className={`text-xs font-medium ${currentStep === step.number ? "text-white" : "text-gray-500"}`}>{step.number}</span>}
+              {currentStep > step.number ? <Check className="w-4 h-4 text-white" /> : <span className={`text-xs font-medium ${currentStep === step.number ? "text-white" : "text-gray-600"}`}>{step.number}</span>}
             </div>
             <span
               className={`
               ml-2 text-xs font-medium 
-              ${currentStep >= step.number ? "text-blue-600" : "text-gray-500"}
+              ${currentStep >= step.number ? "text-blue-600" : "text-gray-600"}
               transition-all duration-300 ease-in-out
             `}
             >

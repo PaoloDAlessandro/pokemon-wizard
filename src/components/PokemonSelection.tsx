@@ -1,12 +1,13 @@
 import axios from "axios";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useToast } from "../hooks/use-toast";
 import { PokemonDetails, PokemonListItem, TrainerInfo } from "../types";
 import { Button } from "./Button";
+import Loader from "./Loader";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
-import Loader from "./Loader";
-import { toast } from "../hooks/use-toast";
+import { fetchPokemonData } from "../utils/api";
 
 const POKEMON_PER_PAGE = 20;
 
@@ -16,6 +17,7 @@ const PokemonSelection: React.FC<{ trainerInfo: TrainerInfo | null; team: Pokemo
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortedPokemon, setSortedPokemon] = useState<PokemonListItem[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (allPokemon.length > 0 && trainerInfo) {
@@ -44,7 +46,11 @@ const PokemonSelection: React.FC<{ trainerInfo: TrainerInfo | null; team: Pokemo
         setSortedPokemon(allPokemon);
       }
     } catch (error) {
-      console.error("Error fetching favorite type Pokemon:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch favorite type Pokémon. Please try again.",
+        variant: "destructive",
+      });
       setSortedPokemon(allPokemon); // Fallback to unsorted list if there's an error
     } finally {
       setIsLoading(false);
@@ -57,16 +63,12 @@ const PokemonSelection: React.FC<{ trainerInfo: TrainerInfo | null; team: Pokemo
     const endIndex = startIndex + POKEMON_PER_PAGE;
     const pokemonToFetch = sortedPokemon.slice(startIndex, endIndex);
 
-    try {
-      const detailsPromises = pokemonToFetch.map((p: PokemonListItem) => axios.get(p.url));
-      const detailsResponses = await Promise.all(detailsPromises);
-      const pokemonDetails = detailsResponses.map((response) => response.data);
-      setPokemonWithDetails(pokemonDetails);
-    } catch (error) {
-      console.error("Error fetching Pokemon details:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    const detailsResponses = await fetchPokemonData<PokemonDetails>(
+      pokemonToFetch.map((p) => p.url),
+      toast
+    );
+    setPokemonWithDetails(detailsResponses);
+    setIsLoading(false);
   };
 
   const handleSelect = (pokemon: PokemonDetails) => {
@@ -82,7 +84,7 @@ const PokemonSelection: React.FC<{ trainerInfo: TrainerInfo | null; team: Pokemo
           title: "Team full",
           description: "You can only have 7 pokemons in your team",
           variant: "destructive",
-          duration: 300000,
+          duration: 2500,
         });
       }
       return prev;
